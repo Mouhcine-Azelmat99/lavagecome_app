@@ -1,11 +1,19 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_single_cascade_in_expression_statements
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:geolocator/geolocator.dart';
 // import 'package:latlng/latlng.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:lavagecom_app/classes/lavageur.dart';
+import 'package:lavagecom_app/constants.dart';
 import 'package:lavagecom_app/screens/map_screen.dart';
+import 'package:lavagecom_app/widgets/historique.dart';
+import 'package:lavagecom_app/widgets/lavagiste_box.dart';
 import 'package:lavagecom_app/widgets/mydrawer.dart';
+import 'package:lavagecom_app/widgets/rating.dart';
+import 'package:lavagecom_app/widgets/showButtom.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -20,6 +28,60 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     mapController = MapController();
+    get_markers();
+    // getPosition();
+  }
+
+  // Future getPosition() async {
+  //   bool services;
+  //   services = await Geolocator.isLocationServiceEnabled();
+  //   if (!services) {
+  //     AwesomeDialog(
+  //       context: context,
+  //       dialogType: DialogType.WARNING,
+  //       animType: AnimType.BOTTOMSLIDE,
+  //       title: 'Service localisation',
+  //       desc: 'Service disabled ',
+  //       btnCancelOnPress: () {},
+  //       btnOkOnPress: () {},
+  //     )..show();
+  //   }
+  //   // LocationPermission per = await Geolocator.checkPermission();
+  //   // print("Permition  :  $per");
+  // }
+
+  final lavageurs = <Lavageur>[
+    Lavageur(3, "Mohmed lavage", 100, 34.020882, -6.841650, true),
+    Lavageur(4, "Hassan lavage", 120, 34.0337, -6.7708, true),
+    Lavageur(5, "Mouhcine lavage", 200, 33.9203, -6.9274, true),
+    Lavageur(5, "Karim lavage", 220, 34.2541, -6.5890, false),
+    Lavageur(2, "Yassine lavage", 220, 33.8052, -6.7869, true),
+    Lavageur(3, "Mouad lavage", 220, 33.8955, -6.3207, true),
+  ];
+
+  final markers = <Marker>[];
+
+  get_markers() {
+    for (var l in lavageurs) {
+      markers.add(Marker(
+        point: LatLng(l.lat, l.long),
+        width: 80,
+        height: 80,
+        builder: (context) => Container(
+            child: IconButton(
+          icon: Icon(Icons.location_on),
+          iconSize: 40,
+          color: l.active ? Colors.green : Colors.red,
+          onPressed: () {
+            showModalBottomSheet(
+                context: context,
+                builder: (builder) {
+                  return showButtom();
+                });
+          },
+        )),
+      ));
+    }
   }
 
   final GlobalKey<ScaffoldState> _key = GlobalKey();
@@ -56,7 +118,7 @@ class _HomeState extends State<Home> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  height: 400,
+                  height: 500,
                   child: Stack(
                     children: [
                       FlutterMap(
@@ -72,74 +134,23 @@ class _HomeState extends State<Home> {
                             userAgentPackageName: 'com.example.app',
                           ),
                           MarkerLayerOptions(
-                            markers: [
-                              Marker(
-                                point: LatLng(34.020882, -6.841650),
-                                width: 80,
-                                height: 80,
-                                builder: (context) => Container(
-                                    child: IconButton(
-                                  icon: Icon(Icons.location_on),
-                                  iconSize: 40,
-                                  color: Colors.red,
-                                  onPressed: () {
-                                    showModalBottomSheet(
-                                        context: context,
-                                        builder: (builder) {
-                                          return Container(
-                                            height: 300,
-                                            child: Text("modal buttom sheet"),
-                                            color: Colors.blue,
-                                          );
-                                        });
-                                  },
-                                )),
-                              ),
-                              Marker(
-                                point: LatLng(34.0337, -6.7708),
-                                width: 80,
-                                height: 80,
-                                builder: (context) => Container(
-                                    child: IconButton(
-                                  icon: Icon(Icons.location_on),
-                                  iconSize: 40,
-                                  color: Colors.deepPurpleAccent,
-                                  onPressed: () {
-                                    showModalBottomSheet(
-                                        context: context,
-                                        builder: (builder) {
-                                          return Container(
-                                            height: 300,
-                                            child: Text("modal buttom sheet"),
-                                            color: Colors.white,
-                                          );
-                                        });
-                                  },
-                                )),
-                              ),
-                            ],
+                            markers: markers,
                           ),
-                          PolylineLayerOptions(
-                            polylineCulling: false,
-                            polylines: [
-                              Polyline(
-                                points: [
-                                  LatLng(34.020882, -6.841650),
-                                  LatLng(34.0337, -6.7708),
-                                ],
-                                color: Colors.blue,
-                                borderColor: Colors.blue,
-                                borderStrokeWidth: 2.0,
-                                isDotted: false,
-                              ),
-                            ],
-                          ),
-                        ],
-                        nonRotatedChildren: [
-                          AttributionWidget.defaultWidget(
-                            source: 'OpenStreetMap contributors',
-                            onSourceTapped: null,
-                          ),
+                          // PolylineLayerOptions(
+                          //   polylineCulling: false,
+                          //   polylines: [
+                          //     Polyline(
+                          //       points: [
+                          //         LatLng(34.020882, -6.841650),
+                          //         LatLng(34.0337, -6.7708),
+                          //       ],
+                          //       color: Colors.blue,
+                          //       borderColor: Colors.blue,
+                          //       borderStrokeWidth: 2.0,
+                          //       isDotted: false,
+                          //     ),
+                          //   ],
+                          // ),
                         ],
                       ),
                       Positioned(
@@ -160,208 +171,50 @@ class _HomeState extends State<Home> {
                           ),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
-                              color: Colors.blue[300],
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey,
-                                  offset: Offset.zero,
-                                  blurRadius: 3,
-                                )
-                              ]),
+                              color: Colors.blue,
+                              boxShadow: [kshadow]),
                         ),
                       ),
                     ],
                   ),
                 ),
+                // Statistics(),
+                // Boxes
                 Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          // ignore: prefer_const_literals_to_create_immutables
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey,
-                              offset: Offset.zero,
-                              blurRadius: 3,
-                            )
-                          ],
-                          color: Colors.blue[100],
-                        ),
-                        height: 100,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          // ignore: prefer_const_literals_to_create_immutables
-                          children: [
-                            Text(
-                              "+ 30",
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.deepPurpleAccent),
-                            ),
-                            Text(
-                              "Lavageur",
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.deepPurpleAccent),
-                            )
-                          ],
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          // ignore: prefer_const_literals_to_create_immutables
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey,
-                              offset: Offset.zero,
-                              blurRadius: 3,
-                            )
-                          ],
-                          color: Colors.deepOrangeAccent[200],
-                        ),
-                        height: 100,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          // ignore: prefer_const_literals_to_create_immutables
-                          children: [
-                            Text(
-                              "+ 200",
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            ),
-                            Text(
-                              "Clients",
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            )
-                          ],
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 30),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          // ignore: prefer_const_literals_to_create_immutables
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey,
-                              offset: Offset.zero,
-                              blurRadius: 3,
-                            )
-                          ],
-                          color: Colors.deepPurpleAccent,
-                        ),
-                        height: 100,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          // ignore: prefer_const_literals_to_create_immutables
-                          children: [
-                            Text(
-                              "+ 50",
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            ),
-                            Text(
-                              "Ville",
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.all(10),
-                  color: Colors.grey[100],
-                  child: Column(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(bottom: 15),
-                        color: Colors.white,
-                        child: ListTile(
-                          style: ListTileStyle.list,
-                          focusColor: Colors.white,
-                          title: Text("Lavage Name"),
-                          leading: Icon(Icons.history),
-                          subtitle: Text("sale || 100\$"),
-                          trailing: IconButton(
-                            icon: Icon(Icons.call),
-                            onPressed: () {},
+                  padding: EdgeInsets.all(15),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        for (var lavageur in lavageurs)
+                          Lavagiste_Card(
+                            name: lavageur.name,
+                            price1: lavageur.price,
+                            price2: lavageur.price,
+                            rating: lavageur.rating,
+                            active: lavageur.active,
+                            go_to_location: () {
+                              mapController.move(
+                                LatLng(lavageur.lat, lavageur.long),
+                                15.2,
+                              );
+                            },
                           ),
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(bottom: 15),
-                        color: Colors.white,
-                        child: ListTile(
-                          style: ListTileStyle.list,
-                          focusColor: Colors.white,
-                          title: Text("Lavage Name"),
-                          leading: Icon(Icons.history),
-                          subtitle: Text("sale || 100\$"),
-                          trailing: IconButton(
-                            icon: Icon(Icons.call),
-                            onPressed: () {},
-                          ),
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(bottom: 15),
-                        color: Colors.white,
-                        child: ListTile(
-                          style: ListTileStyle.list,
-                          focusColor: Colors.white,
-                          title: Text("Lavage Name"),
-                          leading: Icon(Icons.history),
-                          subtitle: Text("sale || 100\$"),
-                          trailing: IconButton(
-                            icon: Icon(Icons.call),
-                            onPressed: () {},
-                          ),
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(bottom: 15),
-                        color: Colors.white,
-                        child: ListTile(
-                          style: ListTileStyle.list,
-                          focusColor: Colors.white,
-                          title: Text("Lavage Name"),
-                          leading: Icon(Icons.history),
-                          subtitle: Text("sale || 100\$"),
-                          trailing: IconButton(
-                            icon: Icon(Icons.call),
-                            onPressed: () {},
-                          ),
-                        ),
-                      )
-                    ],
+                      ],
+                    ),
                   ),
                 )
+                // Historique()
               ],
             ),
           ),
         ));
   }
 }
+
+
+
+
+
 
 // AIzaSyBRaD6L2NfvB-VF9AgOJlWDDFUP__ajjcI

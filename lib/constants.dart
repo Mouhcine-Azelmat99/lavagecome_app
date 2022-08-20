@@ -37,3 +37,9 @@ RaisedButton kbutton(color, text, textcolor, double px, Function function) {
     ),
   );
 }
+
+final kshadow = BoxShadow(
+  color: Colors.grey,
+  offset: Offset.zero,
+  blurRadius: 3,
+);
