@@ -20,8 +20,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Home(),
-      initialRoute: 'home',
+      home: Register_Lavageur(),
+      initialRoute: 'register_lavageur',
       routes: {
         'home': (context) => Home(),
         'login_client': (context) => Login_Client(),

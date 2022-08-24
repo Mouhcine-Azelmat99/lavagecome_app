@@ -7,33 +7,31 @@ class Page3 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        SizedBox(
-          height: 15,
-        ),
-        Text(
-          "Discover New",
-          style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-        ),
-        SizedBox(
-          height: 6,
-        ),
-        Text(
-          "Information and Posts",
-          style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-        ),
-        SizedBox(
-          height: 6,
-        ),
-        Text(
-          "Easly Way",
-          style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-      ]),
-    );
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      SizedBox(
+        height: 15,
+      ),
+      Text(
+        "Discover New",
+        style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+      ),
+      SizedBox(
+        height: 6,
+      ),
+      Text(
+        "Information and Posts",
+        style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+      ),
+      SizedBox(
+        height: 6,
+      ),
+      Text(
+        "Easly Way",
+        style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+      ),
+      SizedBox(
+        height: 10,
+      ),
+    ]);
   }
 }

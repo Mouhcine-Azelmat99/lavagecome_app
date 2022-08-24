@@ -45,7 +45,7 @@ class _Login_LavageurState extends State<Login_Lavageur> {
               SizedBox(
                 height: 10,
               ),
-              Container(
+              SizedBox(
                 width: MediaQuery.of(context).size.width / 1.4,
                 child: Text(
                   "sign in from here to move the home page",

@@ -64,8 +64,8 @@ class _Map_ScreenState extends State<Map_Screen> {
                         builder: (builder) {
                           return Container(
                             height: 300,
-                            child: Text("modal buttom sheet"),
                             color: Colors.white,
+                            child: Text("modal buttom sheet"),
                           );
                         });
                   },
@@ -75,23 +75,22 @@ class _Map_ScreenState extends State<Map_Screen> {
                 point: LatLng(34.0337, -6.7708),
                 width: 80,
                 height: 80,
-                builder: (context) => Container(
-                    child: IconButton(
+                builder: (context) => IconButton(
                   icon: Icon(Icons.location_on),
                   iconSize: 40,
                   color: Colors.deepPurpleAccent,
                   onPressed: () {
-                    showModalBottomSheet(
-                        context: context,
-                        builder: (builder) {
-                          return Container(
-                            height: 300,
-                            child: Text("modal buttom sheet"),
-                            color: Colors.white,
-                          );
-                        });
+                showModalBottomSheet(
+                    context: context,
+                    builder: (builder) {
+                      return Container(
+                        height: 300,
+                        color: Colors.white,
+                        child: Text("modal buttom sheet"),
+                      );
+                    });
                   },
-                )),
+                ),
               ),
             ],
           ),

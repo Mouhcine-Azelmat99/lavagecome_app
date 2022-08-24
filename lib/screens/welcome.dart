@@ -59,7 +59,7 @@ class _WelcomeState extends State<Welcome> {
                 child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
+                SizedBox(
                   width: double.infinity,
                   child: kbutton(
                     Colors.deepPurpleAccent,
@@ -74,7 +74,7 @@ class _WelcomeState extends State<Welcome> {
                 SizedBox(
                   height: 15,
                 ),
-                Container(
+                SizedBox(
                     width: double.infinity,
                     child: kbutton(
                       Colors.blue[200],
