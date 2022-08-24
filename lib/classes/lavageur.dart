@@ -5,7 +5,8 @@ class Lavageur {
   final double lat;
   final double long;
   final bool active;
+  final String ville;
 
-  Lavageur(
-      this.rating, this.name, this.price, this.lat, this.long, this.active);
+  Lavageur(this.rating, this.name, this.price, this.lat, this.long, this.active,
+      this.ville);
 }

@@ -13,10 +13,12 @@ class Lavagiste_Card extends StatelessWidget {
     required this.active,
     required this.rating,
     required this.go_to_location,
+    required this.ville,
   }) : super(key: key);
   final double price1;
   final double price2;
   final String name;
+  final String ville;
   final bool active;
   final int rating;
   final Function go_to_location;
@@ -26,16 +28,35 @@ class Lavagiste_Card extends StatelessWidget {
     return Card(
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 15),
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(10),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            Image.asset(
+              "assets/icons/profile.png",
+              width: 70,
+            ),
+            SizedBox(
+              width: 10,
+            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   name,
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(
+                  height: 7,
+                ),
+                Text(
+                  ville,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey[600],
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -54,31 +75,13 @@ class Lavagiste_Card extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                Row(
-                  children: [
-                    Text(
-                      "etat :  ",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    Text(
-                      active ? "active" : "disactive",
-                      style: TextStyle(
-                        color: active ? Colors.green : Colors.red,
-                        fontSize: 19,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                )
               ],
             ),
             SizedBox(
-              width: 15,
+              width: 10,
             ),
             Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Container(
                   decoration: BoxDecoration(
@@ -103,13 +106,18 @@ class Lavagiste_Card extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     boxShadow: [kshadow],
-                    color: Colors.blue[50],
+                    color: Colors.deepPurpleAccent,
                   ),
-                  child: IconButton(
+                  child: TextButton(
                     onPressed: () {},
-                    icon: Icon(Icons.call),
-                    color: Colors.green,
-                    iconSize: 26,
+                    child: Text(
+                      "Reserver",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
               ],

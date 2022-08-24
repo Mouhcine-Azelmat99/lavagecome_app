@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:lavagecom_app/screens/clients/login.dart';
 import 'package:lavagecom_app/screens/lavageur/login.dart';
+import 'package:lavagecom_app/screens/lavageur/mes_packes.dart';
 import 'package:lavagecom_app/screens/lavageur/register.dart';
 import 'package:lavagecom_app/screens/map_screen.dart';
 import 'package:lavagecom_app/screens/clients/register.dart';
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
         'register_lavageur': (context) => Register_Lavageur(),
         'welcome': (context) => Welcome(),
         'map_screen': (context) => Map_Screen(),
+        'mes_packes': (context) => MesPackes(),
       },
       debugShowCheckedModeBanner: false,
     );

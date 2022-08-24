@@ -1,9 +1,8 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_single_cascade_in_expression_statements
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_single_cascade_in_expression_statements, unused_field, unnecessary_new, no_leading_underscores_for_local_identifiers, unused_local_variable, prefer_typing_uninitialized_variables
 
-import 'package:awesome_dialog/awesome_dialog.dart';
+// import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:geolocator/geolocator.dart';
 // import 'package:latlng/latlng.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:lavagecom_app/classes/lavageur.dart';
@@ -13,7 +12,9 @@ import 'package:lavagecom_app/widgets/historique.dart';
 import 'package:lavagecom_app/widgets/lavagiste_box.dart';
 import 'package:lavagecom_app/widgets/mydrawer.dart';
 import 'package:lavagecom_app/widgets/rating.dart';
+import 'package:lavagecom_app/widgets/search.dart';
 import 'package:lavagecom_app/widgets/showButtom.dart';
+import 'package:location/location.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -24,39 +25,57 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   late final MapController mapController;
+  // late LocationData myLocation;
+  var mylat = 34.020882;
+  var mylong = -6.841650;
   @override
   void initState() {
     super.initState();
     mapController = MapController();
     get_markers();
-    // getPosition();
+    getPosition().then((value) => {
+          setState(() {
+            mylat = value.latitude as double;
+            mylong = value.longitude as double;
+          })
+        });
+    print("lat : $mylat");
+    print("long : $mylong");
   }
 
-  // Future getPosition() async {
-  //   bool services;
-  //   services = await Geolocator.isLocationServiceEnabled();
-  //   if (!services) {
-  //     AwesomeDialog(
-  //       context: context,
-  //       dialogType: DialogType.WARNING,
-  //       animType: AnimType.BOTTOMSLIDE,
-  //       title: 'Service localisation',
-  //       desc: 'Service disabled ',
-  //       btnCancelOnPress: () {},
-  //       btnOkOnPress: () {},
-  //     )..show();
-  //   }
-  //   // LocationPermission per = await Geolocator.checkPermission();
-  //   // print("Permition  :  $per");
-  // }
+  Future getPosition() async {
+    Location location = new Location();
+
+    bool _serviceEnabled;
+    PermissionStatus _permissionGranted;
+    LocationData _locationData;
+
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    return _locationData = await location.getLocation();
+  }
 
   final lavageurs = <Lavageur>[
-    Lavageur(3, "Mohmed lavage", 100, 34.020882, -6.841650, true),
-    Lavageur(4, "Hassan lavage", 120, 34.0337, -6.7708, true),
-    Lavageur(5, "Mouhcine lavage", 200, 33.9203, -6.9274, true),
-    Lavageur(5, "Karim lavage", 220, 34.2541, -6.5890, false),
-    Lavageur(2, "Yassine lavage", 220, 33.8052, -6.7869, true),
-    Lavageur(3, "Mouad lavage", 220, 33.8955, -6.3207, true),
+    Lavageur(3, "Mohmed lavage", 100, 34.020882, -6.841650, true, "Rabat"),
+    Lavageur(4, "Hassan lavage", 120, 34.0337, -6.7708, true, "meknes"),
+    Lavageur(5, "Mouhcine lavage", 200, 33.9203, -6.9274, true, "Rabat"),
+    Lavageur(5, "Karim lavage", 220, 34.2541, -6.5890, false, "casa"),
+    Lavageur(2, "Yassine lavage", 220, 33.8052, -6.7869, true, "fes"),
+    Lavageur(3, "Mouad lavage", 220, 33.8955, -6.3207, true, "Rabat"),
   ];
 
   final markers = <Marker>[];
@@ -102,7 +121,13 @@ class _HomeState extends State<Home> {
           ),
           actions: [
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                print("search");
+                showSearch(
+                    context: context,
+                    // delegate to customize the search bar
+                    delegate: CustomSearchDelegate());
+              },
               icon: Image.asset(
                 "assets/icons/magnifying_glass.png",
                 width: 30,
@@ -118,13 +143,13 @@ class _HomeState extends State<Home> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  height: 500,
+                  height: 540,
                   child: Stack(
                     children: [
                       FlutterMap(
                         mapController: mapController,
                         options: MapOptions(
-                          center: LatLng(34.020882, -6.841650),
+                          center: LatLng(mylat, mylong),
                           zoom: 9.2,
                         ),
                         layers: [
@@ -181,7 +206,7 @@ class _HomeState extends State<Home> {
                 // Statistics(),
                 // Boxes
                 Padding(
-                  padding: EdgeInsets.all(15),
+                  padding: EdgeInsets.all(10),
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
@@ -193,6 +218,7 @@ class _HomeState extends State<Home> {
                             price2: lavageur.price,
                             rating: lavageur.rating,
                             active: lavageur.active,
+                            ville: lavageur.ville,
                             go_to_location: () {
                               mapController.move(
                                 LatLng(lavageur.lat, lavageur.long),
@@ -214,7 +240,9 @@ class _HomeState extends State<Home> {
 
 
 
-
-
-
-// AIzaSyBRaD6L2NfvB-VF9AgOJlWDDFUP__ajjcI
+// DRAWER LAVAGISTE
+// switch etat 
+// mes packes
+// edit profil
+// DRAWER CLIENT
+// favorites
