@@ -26,21 +26,32 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   late final MapController mapController;
   // late LocationData myLocation;
-  var mylat = 34.020882;
-  var mylong = -6.841650;
+  var mylat = 34.0337;
+  var mylong = -6.7708;
+  bool loading = false;
   @override
   void initState() {
     super.initState();
     mapController = MapController();
-    get_markers();
-    getPosition().then((value) => {
+    getData();
+    // print("lat : $mylat");
+    // print("long : $mylong");
+  }
+
+  getData() async {
+    await getPosition().then((value) => {
           setState(() {
             mylat = value.latitude as double;
             mylong = value.longitude as double;
           })
         });
+    await get_markers();
     print("lat : $mylat");
     print("long : $mylong");
+
+    setState(() {
+      loading = false;
+    });
   }
 
   Future getPosition() async {
@@ -106,135 +117,139 @@ class _HomeState extends State<Home> {
   final GlobalKey<ScaffoldState> _key = GlobalKey();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        key: _key,
-        appBar: AppBar(
-          elevation: 0,
-          leading: IconButton(
-            onPressed: () {
-              _key.currentState?.openDrawer();
-            },
-            icon: Image.asset(
-              "assets/icons/align_left.png",
-              width: 30,
-            ),
-          ),
-          actions: [
-            IconButton(
-              onPressed: () {
-                print("search");
-                showSearch(
-                    context: context,
-                    // delegate to customize the search bar
-                    delegate: CustomSearchDelegate());
-              },
-              icon: Image.asset(
-                "assets/icons/magnifying_glass.png",
-                width: 30,
-              ),
-            )
-          ],
-          backgroundColor: Colors.white,
-        ),
-        drawer: MyDrawer(),
-        body: Container(
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: 540,
-                  child: Stack(
-                    children: [
-                      FlutterMap(
-                        mapController: mapController,
-                        options: MapOptions(
-                          center: LatLng(mylat, mylong),
-                          zoom: 9.2,
-                        ),
-                        layers: [
-                          TileLayerOptions(
-                            urlTemplate:
-                                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-                            userAgentPackageName: 'com.example.app',
-                          ),
-                          MarkerLayerOptions(
-                            markers: markers,
-                          ),
-                          // PolylineLayerOptions(
-                          //   polylineCulling: false,
-                          //   polylines: [
-                          //     Polyline(
-                          //       points: [
-                          //         LatLng(34.020882, -6.841650),
-                          //         LatLng(34.0337, -6.7708),
-                          //       ],
-                          //       color: Colors.blue,
-                          //       borderColor: Colors.blue,
-                          //       borderStrokeWidth: 2.0,
-                          //       isDotted: false,
-                          //     ),
-                          //   ],
-                          // ),
-                        ],
-                      ),
-                      Positioned(
-                        bottom: 10,
-                        right: 10,
-                        child: Container(
-                          padding: EdgeInsets.all(3),
-                          // ignore: sort_child_properties_last
-                          child: IconButton(
-                            icon: Image.asset(
-                              width: 25,
-                              "assets/icons/plein_ecran.png",
-                              color: Colors.white,
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).pushNamed('map_screen');
-                            },
-                          ),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.blue,
-                              boxShadow: [kshadow]),
-                        ),
-                      ),
-                    ],
-                  ),
+    return loading == true
+        ? Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          )
+        : Scaffold(
+            key: _key,
+            appBar: AppBar(
+              elevation: 0,
+              leading: IconButton(
+                onPressed: () {
+                  _key.currentState?.openDrawer();
+                },
+                icon: Image.asset(
+                  "assets/icons/align_left.png",
+                  width: 30,
                 ),
-                // Statistics(),
-                // Boxes
-                Padding(
-                  padding: EdgeInsets.all(10),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        for (var lavageur in lavageurs)
-                          Lavagiste_Card(
-                            name: lavageur.name,
-                            price1: lavageur.price,
-                            price2: lavageur.price,
-                            rating: lavageur.rating,
-                            active: lavageur.active,
-                            ville: lavageur.ville,
-                            go_to_location: () {
-                              mapController.move(
-                                LatLng(lavageur.lat, lavageur.long),
-                                15.2,
-                              );
-                            },
-                          ),
-                      ],
-                    ),
+              ),
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    print("search");
+                    showSearch(
+                        context: context,
+                        // delegate to customize the search bar
+                        delegate: CustomSearchDelegate());
+                  },
+                  icon: Image.asset(
+                    "assets/icons/magnifying_glass.png",
+                    width: 30,
                   ),
                 )
-                // Historique()
               ],
+              backgroundColor: Colors.white,
             ),
-          ),
-        ));
+            drawer: MyDrawer(),
+            body: Container(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 590,
+                      child: Stack(
+                        children: [
+                          FlutterMap(
+                            mapController: mapController,
+                            options: MapOptions(
+                              center: LatLng(mylat, mylong),
+                              zoom: 9.2,
+                            ),
+                            layers: [
+                              TileLayerOptions(
+                                urlTemplate:
+                                    "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                                userAgentPackageName: 'com.example.app',
+                              ),
+                              MarkerLayerOptions(
+                                markers: markers,
+                              ),
+                              // PolylineLayerOptions(
+                              //   polylineCulling: false,
+                              //   polylines: [
+                              //     Polyline(
+                              //       points: [
+                              //         LatLng(34.020882, -6.841650),
+                              //         LatLng(34.0337, -6.7708),
+                              //       ],
+                              //       color: Colors.blue,
+                              //       borderColor: Colors.blue,
+                              //       borderStrokeWidth: 2.0,
+                              //       isDotted: false,
+                              //     ),
+                              //   ],
+                              // ),
+                            ],
+                          ),
+                          Positioned(
+                            bottom: 10,
+                            right: 10,
+                            child: Container(
+                              padding: EdgeInsets.all(3),
+                              // ignore: sort_child_properties_last
+                              child: IconButton(
+                                icon: Image.asset(
+                                  width: 25,
+                                  "assets/icons/plein_ecran.png",
+                                  color: Colors.white,
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).pushNamed('map_screen');
+                                },
+                              ),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.blue,
+                                  boxShadow: [kshadow]),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    // Statistics(),
+                    // Boxes
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            for (var lavageur in lavageurs)
+                              Lavagiste_Card(
+                                name: lavageur.name,
+                                price1: lavageur.price,
+                                price2: lavageur.price,
+                                rating: lavageur.rating,
+                                active: lavageur.active,
+                                ville: lavageur.ville,
+                                go_to_location: () {
+                                  mapController.move(
+                                    LatLng(lavageur.lat, lavageur.long),
+                                    15.2,
+                                  );
+                                },
+                              ),
+                          ],
+                        ),
+                      ),
+                    )
+                    // Historique()
+                  ],
+                ),
+              ),
+            ));
   }
 }
 

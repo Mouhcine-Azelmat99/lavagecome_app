@@ -116,20 +116,25 @@ class showButtom extends StatelessWidget {
           SizedBox(
             height: 15,
           ),
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(15),
-            decoration: BoxDecoration(
-              color: Colors.deepPurpleAccent,
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: Center(
-              child: Text(
-                "Reserver",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushNamed("reservation");
+            },
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: Colors.deepPurpleAccent,
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: Center(
+                child: Text(
+                  "Reserver",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),

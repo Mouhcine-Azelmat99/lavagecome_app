@@ -109,7 +109,9 @@ class Lavagiste_Card extends StatelessWidget {
                     color: Colors.deepPurpleAccent,
                   ),
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pushNamed("reservation");
+                    },
                     child: Text(
                       "Reserver",
                       style: TextStyle(
